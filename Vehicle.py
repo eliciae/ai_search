@@ -1,3 +1,5 @@
+from ai_search import Package
+
 class Vehicle:
     HomeLocation = 0
 
