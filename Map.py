@@ -60,7 +60,7 @@ def prune(g, gapf):
             g.remove_node(node)
         comps.pop(0)
 
-dim = 10  # one side of a square map;
+dim = 5  # one side of a square map;
 gapfreq = 0.25  # how drastic to make the random gaps in the graph;
                # use a value < 0.3; higher values cut out too much
 w = makeMap(dim, dim, gapfreq)
