@@ -1,30 +1,45 @@
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import random as rand
+from a1 import Package
 
 
 def makeMap(m, n, gapfreq):
+    """ Creates a graph in the form of a grid, with mXn nodes.
+    The graph has irregular holes poked into it by random deletion.
+
+    :param m: number of nodes on one dimension of the grid
+    :param n: number of nodes on the other dimension
+    :param gapfreq: the fraction of nodes to delete (see function prune() below)
+    :return: a networkx graph with nodes and edges.
+
+    The default edge weight is  (see below).  The edge weights can be changed by
+    designing a list that tells the frequency of weights desired.
+      100% edge weights 1:  [(1,100)]
+      50% weight 1; 50% weight 2: [(1,50),(2,100)]
+      33% each of 1,2,5: [(1,33),(2,67),(5,100)]
+      a fancy distribution:  [(1,10),(4,50),(6,90),(10,100)]
+      (10% @ 1, 40% @ 4, 40% @ 6, 10% @ 10)
+    """
     g = nx.grid_2d_graph(m, n)
-    one_weights = [(1,100)]
-    # - weights is a list of (weight,cumulativefrequency) pairs
-    # - one_weights: all edges have cost 1
-    # two_weights = [(1,50),(2,100)]
-    # - two_weights: 1,2 equally likely 50-50
-    # three_weights = [(1,33),(2,67),(5,100)]
-    # - three_weights: 1,2,5 equally likely 33-34-33
-    # four_weights = [(1,10),(4,50),(6,90),(10,100)]
-    # - four_weights: 10% @ 1, 40% @ 4, 40% @ 6, 10% @ 10
-    # five_weights = [(1,5),(2,10),(3,100)]
-    # - five weight: 5% @ 1, 5% @ 2, 90% @ 3
+    weights = [(1, 100)]
     prune(g, gapfreq)
-    setWeights(g, one_weights)
+    setWeights(g, weights)
     return g
 
 
 def setWeights(g, weights):
-    # setting weights...
-    # weights are [(w,cf) ... ]
-    # w is the weight, cf is the cumulative frequency
+    """ Use the weights list to set weights of graph g
+    :param g: a networkx graph
+    :param weights: a list of pairs [(w,cf) ... ]
+    :return: nothing
+
+    weights are [(w,cf) ... ]
+    w is the weight, cf is the cumulative frequency
+
+    This function uses a uniform random number to index into the weights list.
+    """
     for (i, j) in nx.edges(g):
         c = rand.randint(1,100)
         w = [a for (a,b) in weights if b >= c] # drop all pairs whose cf is < c
@@ -33,7 +48,10 @@ def setWeights(g, weights):
 
 
 def draw(g):
-    # just for visualization
+    """ Draw the graph, just for visualization.  Also creates a jpg in $CWD
+    :param g: a networkx graph
+    :return:
+    """
     pos = {n: n for n in nx.nodes(g)}
     nx.draw_networkx_nodes(g, pos, node_size=20)
     edges = nx.edges(g)
@@ -45,14 +63,21 @@ def draw(g):
 
 
 def prune(g, gapf):
-    """poke random holes the __g by deleting random nodes, with frequency gapf.
-       Then clean up by deleting all but the largest connected component.
-        """
+    """ Poke random holes the graph g by deleting random nodes, with probability gapf.
+    Then clean up by deleting all but the largest connected component.
+
+    Interesting range (roughly):  0.1 < gapf < 0.3
+    values too far above 0.3 lead to lots of pruning, but rather smaller graphs
+
+    :param g: a networkx graph
+    :param gapf: a fraction in [0,1]
+    :return: nothing
+    """
     # creating gaps...
     for node in nx.nodes(g):
         if rand.random() < gapf:
             g.remove_node(node)
-    # deleting small connected components...
+    # deleting all but the largest connected component...
     comps = sorted(nx.connected_components(g), key=len, reverse=False)
     while len(comps) > 1:
         nodes = comps[0]
@@ -60,8 +85,23 @@ def prune(g, gapf):
             g.remove_node(node)
         comps.pop(0)
 
-dim = 5  # one side of a square map;
-gapfreq = 0.25  # how drastic to make the random gaps in the graph;
-               # use a value < 0.3; higher values cut out too much
-w = makeMap(dim, dim, gapfreq)
+
+def addPackages(g, numPkg):
+    """
+    creates a list of packages that are assigned an integer id based on where they are placed in the graph
+
+    :param g: networkx graph
+    :param numPkg: the number of packages that should be randomly added to the graph
+    :return: a list of packages
+    """
+    for i in range(0, numPkg):
+        pkgList = pkgList.append(Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+    return pkgList
+
+# script to use the above functions
+dim = 40
+gapfreq = 0.25
+w = makeMap(dim, dim, gapfreq)   # a square graph
+
+print(addPackages(w, 3))
 draw(w)
