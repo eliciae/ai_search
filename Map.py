@@ -2,7 +2,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import random as rand
-from ai_search import Package
+from ai_search import Package as pkg
 
 
 def makeMap(m, n, gapfreq):
@@ -94,15 +94,16 @@ def addPackages(g, numPkg):
     :param numPkg: the number of packages that should be randomly added to the graph
     :return: a list of packages
     """
-    pkgList = list()
+    pkgList = []
     for i in range(0, numPkg):
-        pkgList = pkgList.append(Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+        pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
     return pkgList
 
 # script to use the above functions
-dim = 40
+dim = 5
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
+for package in addPackages(w, 3):
+    print("start: " + package.getNodeStartLocation() + " end : " + package.getNodeEndLocation())
 
-print(addPackages(w, 3))
 draw(w)
