@@ -20,6 +20,8 @@ class Problem:
         states = []
         vehicles = State.getVehicleList()
         for v in vehicles:
+            possibleVehicles = []
+            updatedPickupList = state.getPackageList()
             neighbours = Problem.graph.neighbors(v.getCurrLocation())
             for n in neighbours:
                 # pass along the package list belonging to the truck
@@ -32,8 +34,11 @@ class Problem:
                 for pkg in state.getPackageList():
                     if pkg.getStartLocation() == n:
                         truckPackages.append(pkg)
-                        updatedState = state.getPackageList().remove(pkg)
-                updatedVehicle = truck.Vehicle(n, truckPackages)
+                        updatedPickupList.remove(pkg)
+                possibleVehicles.append(truck.Vehicle(n, truckPackages))
+                for pv in possibleVehicles:
+                    states.append(State(list(pv), updatedPickupList))
+
 
 
         # make node into state list from given state
