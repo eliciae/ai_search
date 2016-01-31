@@ -108,6 +108,4 @@ print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
 pkgList = addPackages(w, 1)
 
-
-
 draw(w)

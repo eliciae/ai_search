@@ -1,12 +1,16 @@
 class Vehicle:
-    def __init__(self, myHomeLocation):
-        self.myLoadOfPackages = []
-        self.myHomeLocation = myHomeLocation
-        self.myCurrentLocation = self.myHomeLocation
+    def __init__(self, myCurrLocation, myPackageList):
+        self.myLoadOfPackages = myPackageList
+        self.myCurrentLocation = self.myCurrLocation
 
     def getCurrLocation(self):
         return self.myCurrentLocation
 
-    def getHomeLocation(self):
-        return self.myHomeLocation
-    
+    def setCurrLocation(self, currLocation):
+        self.myHomeLocation = currLocation
+
+    def getPackageList(self):
+        return self.getPackageList()
+
+    def setPackageList(self, packageList):
+        self.myLoadOfPackages = packageList

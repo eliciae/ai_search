@@ -17,12 +17,24 @@ class Problem:
     def successors(self, state):
         # getNeighbours(current Node) curr node comes from the
         # vehicle which comes from a state
+        states = []
         vehicles = State.getVehicleList()
         for v in vehicles:
             neighbours = Problem.graph.neighbors(v.getCurrLocation())
-            states = list()
             for n in neighbours:
-                updatedVehicles = truck.Vehicle()
+                # pass along the package list belonging to the truck
+                truckPackages = v.getPackageList()
+                # if n is the destination of a package they are carrying, drop it off
+                for pkg in truckPackages:
+                    if pkg.getEndLocation() == n:
+                        truckPackages.remove(pkg)
+                # if n has a package, pick it up
+                for pkg in state.getPackageList():
+                    if pkg.getStartLocation() == n:
+                        truckPackages.append(pkg)
+                        updatedState = state.getPackageList().remove(pkg)
+                updatedVehicle = truck.Vehicle(n, truckPackages)
+
 
         # make node into state list from given state
         # returns a node list
