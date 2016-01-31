@@ -6,6 +6,7 @@ from ai_search import Package as pkg
 from ai_search import Problem as prob
 from ai_search import Vehicle as truck
 from ai_search import State
+from ai_search import Search
 
 
 def makeMap(m, n, gapfreq):
@@ -118,4 +119,6 @@ for state in stateList:
     print(state.getVehicleList().getCurrLocation())
     #print(state.getPackageList().getNodeStartLocation())
 
+mySearch = Search.Search()
+mySearch.search(prob.Problem(w, pkgList, vehicle), State.State(vehicle, pkgList))
 draw(w)
