@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random as rand
 from ai_search import Package as pkg
-from ai_search import State as state
+
 
 
 def makeMap(m, n, gapfreq):
@@ -108,6 +108,6 @@ print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
 pkgList = addPackages(w, 1)
 
-State.state()
+
 
 draw(w)

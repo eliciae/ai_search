@@ -1,10 +1,15 @@
+from ai_search import Vehicle as truck
+
 class Problem:
 
-    def initialize(self):
-        return
+    def __init__(self, map, listOfPackages, listOfVehicles):
+        self.map = map
+        self.listOfPackages = listOfPackages
+        self.listOfVehicles = listOfVehicles
 
     def isGoal(self, state):
-        return
+        return not self.listOfPackages and not self.listOfVehicles
+
 
     def successors(self, state):
-        return
+        return None
