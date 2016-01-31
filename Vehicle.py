@@ -1,7 +1,7 @@
 class Vehicle:
     def __init__(self, myCurrLocation, myPackageList):
         self.myLoadOfPackages = myPackageList
-        self.myCurrentLocation = self.myCurrLocation
+        self.myCurrentLocation = myCurrLocation
 
     def getCurrLocation(self):
         return self.myCurrentLocation
