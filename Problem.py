@@ -7,10 +7,10 @@ import networkx as nx
 class Problem:
     graph = None
 
-    def __init__(self, myMap, listOfPackages, listOfVehicles):
+    def __init__(self, myMap):
         Problem.graph = myMap
-        self.listOfPackages = listOfPackages
-        self.listOfVehicles = listOfVehicles
+        #self.listOfPackages = listOfPackages
+        #self.listOfVehicles = listOfVehicles
 
     def isGoal(self, state):
         return not state.getPackageList() and not state.getVehicleList()

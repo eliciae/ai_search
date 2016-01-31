@@ -14,8 +14,8 @@ class Search:
                 print("goal")
                 return here
             else:
-                print("called Succesor")
                 nextState = problem.successors(here)
+                print("Popped Element: {0}" .format(here.getVehicleList().getCurrLocation()))
                 for s in nextState:
                     searchQueue.put(s)
         return "Failed Hardcore"

@@ -111,14 +111,14 @@ print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
 pkgList = addPackages(w, 1)
 location = rand.choice(w.nodes())
-print(location)
+print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
 vehicle = truck.Vehicle(location, None, location)
-#stateList = prob.Problem(w, pkgList, vehicle).successors(State.State(vehicle, pkgList))
+#stateList = prob.Problem(w).successors(State.State(vehicle, pkgList))
 #print(stateList)
 #for state in stateList:
     #print(state.getVehicleList().getCurrLocation())
     #print(state.getPackageList().getNodeStartLocation())
 
 mySearch = Search.Search()
-mySearch.search(prob.Problem(w, pkgList, vehicle), State.State(vehicle, pkgList))
+mySearch.search(prob.Problem(w), State.State(vehicle, pkgList))
 draw(w)
