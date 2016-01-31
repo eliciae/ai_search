@@ -3,7 +3,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random as rand
 from ai_search import Package as pkg
-
+from ai_search import Problem as prob
+from ai_search import Vehicle as truck
+from ai_search import State
 
 
 def makeMap(m, n, gapfreq):
@@ -95,10 +97,10 @@ def addPackages(g, numPkg):
     :param numPkg: the number of packages that should be randomly added to the graph
     :return: a list of packages
     """
-    pkgList = []
+    # pkgList = []
     for i in range(0, numPkg):
-        pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
-    return pkgList
+        return pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes()))
+    # return pkgList
 
 # script to use the above functions
 dim = 5
@@ -107,5 +109,13 @@ w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
 pkgList = addPackages(w, 1)
+location = rand.choice(w.nodes())
+print(location)
+vehicle = truck.Vehicle(location, None, location)
+stateList = prob.Problem(w, pkgList, vehicle).successors(State.State(vehicle, pkgList))
+print(stateList)
+for state in stateList:
+    print(state.getVehicleList().getCurrLocation())
+    #print(state.getPackageList().getNodeStartLocation())
 
 draw(w)
