@@ -8,7 +8,7 @@ class Vehicle:
         return self.myCurrentLocation
 
     def setCurrLocation(self, currLocation):
-        self.myHomeLocation = currLocation
+        self.myCurrentLocation = currLocation
 
     def getPackageList(self):
         return self.myPackageList

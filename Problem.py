@@ -1,5 +1,6 @@
 from ai_search import Vehicle as truck
 from ai_search import State
+from ai_search import Package as Pkg
 import networkx as nx
 
 
@@ -19,14 +20,14 @@ class Problem:
         # vehicle which comes from a state
         states = []
         vehicle = state.getVehicleList()
-        updatedVehicleList = vehicle
         package = state.getPackageList()
-        updatedPackageList = package
         neighbours = Problem.graph.neighbors(vehicle.getCurrLocation())
         for n in neighbours:
+            updatedPackageList = Pkg.Package(package.getNodeStartLocation(), package.getNodeEndLocation())
+            updatedVehicleList = truck.Vehicle(n, updatedPackageList, vehicle.getMyHomeLocation())
             updatedVehicleList.setCurrLocation(n)
             # drop off
-            if updatedVehicleList.getPackageList() and n == updatedVehicleList.getPackageList().getEndLocation():
+            if updatedVehicleList.getPackageList() and n == updatedVehicleList.getPackageList().getNodeEndLocation():
                 updatedVehicleList.setPackageList(None)
             # pick up
             if package and n == package.getNodeStartLocation():
