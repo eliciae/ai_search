@@ -104,7 +104,7 @@ def addPackages(g, numPkg):
     # return pkgList
 
 # script to use the above functions
-dim = 5
+dim = 3
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
@@ -113,10 +113,10 @@ pkgList = addPackages(w, 1)
 location = rand.choice(w.nodes())
 print(location)
 vehicle = truck.Vehicle(location, None, location)
-stateList = prob.Problem(w, pkgList, vehicle).successors(State.State(vehicle, pkgList))
-print(stateList)
-for state in stateList:
-    print(state.getVehicleList().getCurrLocation())
+#stateList = prob.Problem(w, pkgList, vehicle).successors(State.State(vehicle, pkgList))
+#print(stateList)
+#for state in stateList:
+    #print(state.getVehicleList().getCurrLocation())
     #print(state.getPackageList().getNodeStartLocation())
 
 mySearch = Search.Search()

@@ -11,8 +11,10 @@ class Search:
         while(searchQueue.not_empty):
             here = searchQueue.get()
             if problem.isGoal(here):
+                print("goal")
                 return here
             else:
+                print("called Succesor")
                 nextState = problem.successors(here)
                 for s in nextState:
                     searchQueue.put(s)

@@ -13,7 +13,7 @@ class Problem:
         self.listOfVehicles = listOfVehicles
 
     def isGoal(self, state):
-        return not self.listOfPackages and not self.listOfVehicles
+        return not state.getPackageList() and not state.getVehicleList()
 
     def successors(self, state):
         # getNeighbours(current Node) curr node comes from the
@@ -23,7 +23,10 @@ class Problem:
         package = state.getPackageList()
         neighbours = Problem.graph.neighbors(vehicle.getCurrLocation())
         for n in neighbours:
-            updatedPackageList = Pkg.Package(package.getNodeStartLocation(), package.getNodeEndLocation())
+            if package:
+                updatedPackageList = Pkg.Package(package.getNodeStartLocation(), package.getNodeEndLocation())
+            else:
+                updatedPackageList = None
             updatedVehicleList = truck.Vehicle(n, updatedPackageList, vehicle.getMyHomeLocation())
             updatedVehicleList.setCurrLocation(n)
             # drop off
