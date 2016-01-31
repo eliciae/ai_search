@@ -4,7 +4,7 @@ class Vehicle:
         self.myHomeLocation = myHomeLocation
         self.myCurrentLocation = self.myHomeLocation
 
-    def getCurLocation(self):
+    def getCurrLocation(self):
         return self.myCurrentLocation
 
     def getHomeLocation(self):
