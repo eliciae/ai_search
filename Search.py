@@ -18,4 +18,5 @@ class Search:
                 print("Popped Element: {0}" .format(here.getVehicleList().getCurrLocation()))
                 for s in nextState:
                     searchQueue.put(s)
+                #print(nextState.getVehicleList().getCurrLocation())
         return "Failed Hardcore"

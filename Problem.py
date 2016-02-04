@@ -9,65 +9,36 @@ class Problem:
 
     def __init__(self, myMap):
         Problem.graph = myMap
-        #self.listOfPackages = listOfPackages
-        #self.listOfVehicles = listOfVehicles
 
     def isGoal(self, state):
         return not state.getPackageList() and not state.getVehicleList()
 
     def successors(self, state):
-        # getNeighbours(current Node) curr node comes from the
-        # vehicle which comes from a state
-        states = []
-        vehicle = state.getVehicleList()
+        driver = state.getVehicleList()
         package = state.getPackageList()
-        neighbours = Problem.graph.neighbors(vehicle.getCurrLocation())
-        for n in neighbours:
-            if package:
-                updatedPackageList = Pkg.Package(package.getNodeStartLocation(), package.getNodeEndLocation())
-            else:
-                updatedPackageList = None
-            updatedVehicleList = truck.Vehicle(n, updatedPackageList, vehicle.getMyHomeLocation())
-            updatedVehicleList.setCurrLocation(n)
-            # drop off
-            if updatedVehicleList.getPackageList() and n == updatedVehicleList.getPackageList().getNodeEndLocation():
-                updatedVehicleList.setPackageList(None)
-            # pick up
-            if package and n == package.getNodeStartLocation():
-                updatedVehicleList.setPackageList(package)
-                updatedPackageList = None
-            # vehicle home and no more packages
-            if (state.getPackageList() == None and vehicle.getPackageList() == None) and n == vehicle.getMyHomeLocation():
-                updatedVehicleList = None
-            states.append(State.State(updatedVehicleList, updatedPackageList))
-        return states
+        updatedState = None
+        ##side comment: if there are multiple drivers
+
+        #if there is still a package in the main package
+        #list
+        if(package):
+            print("Going to package")
+            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeStartLocation()))
+            updatedState = State.State(truck.Vehicle(package.getNodeStartLocation(), package, driver.getHomeLocation()), None)
+
+        #if there aren't any packages in the main list
+        # but the driver has one on his drop off list
+        elif(not package and driver.getPackageList()):
+            print("Going to package destination")
+            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getPackageList().getNodeEndLocation() ))
+            updatedState = State.State(truck.Vehicle(driver.getPackageList().getNodeEndLocation(), None, driver.getHomeLocation()), None)
+
+        #nothing in either package list or drop off list
+        # go home
+        elif(not package and not driver.getPackageList()):
+            print("Getting the fuck outta here")
+            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getHomeLocation()))
+            updatedState = State.State(None, None)
 
 
-        # states = []
-        # vehicles = State.getVehicleList()
-        # for v in vehicles:
-        #     possibleVehicles = []
-        #     updatedPickupList = state.getPackageList()
-        #     neighbours = Problem.graph.neighbors(v.getCurrLocation())
-        #     for n in neighbours:
-        #         # pass along the package list belonging to the truck
-        #         truckPackages = v.getPackageList()
-        #         # if n is the destination of a package they are carrying, drop it off
-        #         for pkg in truckPackages:
-        #             if pkg.getEndLocation() == n:
-        #                 truckPackages.remove(pkg)
-        #         # if n has a package, pick it up
-        #         for pkg in state.getPackageList():
-        #             if pkg.getStartLocation() == n:
-        #                 truckPackages.append(pkg)
-        #                 updatedPickupList.remove(pkg)
-        #         possibleVehicles.append(truck.Vehicle(n, truckPackages))
-        #         for pv in possibleVehicles:
-        #             states.append(State(list(pv), updatedPickupList))
-
-
-
-
-        # make node into state list from given state
-        # returns a node list
-        return None
+        return [updatedState]

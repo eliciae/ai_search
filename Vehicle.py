@@ -16,5 +16,5 @@ class Vehicle:
     def setPackageList(self, packageList):
         self.myPackageList = packageList
 
-    def getMyHomeLocation(self):
+    def getHomeLocation(self):
         return self.myHomeLocation
