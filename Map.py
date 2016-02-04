@@ -98,10 +98,10 @@ def addPackages(g, numPkg):
     :param numPkg: the number of packages that should be randomly added to the graph
     :return: a list of packages
     """
-    # pkgList = []
+    pkgList = []
     for i in range(0, numPkg):
-        return pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes()))
-    # return pkgList
+        pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+    return pkgList
 
 # script to use the above functions
 dim = 3
@@ -109,15 +109,12 @@ gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
-pkgList = addPackages(w, 1)
+pkgList = addPackages(w, 2)
 location = rand.choice(w.nodes())
-print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
-vehicle = truck.Vehicle(location, None, location)
-#stateList = prob.Problem(w).successors(State.State(vehicle, pkgList))
-#print(stateList)
-#for state in stateList:
-    #print(state.getVehicleList().getCurrLocation())
-    #print(state.getPackageList().getNodeStartLocation())
+#print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
+vehicle = truck.Vehicle(location, [], location)
+for pkgLocation in pkgList:
+    print("PkgStart: {0}, PkgEnd: {1}" .format(pkgLocation.getNodeStartLocation(), pkgLocation.getNodeEndLocation()))
 
 mySearch = Search.Search()
 mySearch.search(prob.Problem(w), State.State(vehicle, pkgList))
