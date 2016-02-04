@@ -29,8 +29,8 @@ class Problem:
             print("After Pop: {0}" .format(packageList))
             print("Package Picked up {0}" .format(packagePickedUp))
             if(packageList):
-                driver.getPackageList().append(packageList[0])
-                updatedState = State.State(truck.Vehicle(packageList[0].getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList)
+                driver.getPackageList().append(packagePickedUp)
+                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList)
             else:
                 driver.getPackageList().append(packagePickedUp)
                 updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList)
@@ -39,12 +39,13 @@ class Problem:
         # but the driver has one on his drop off list
         elif(driver.getPackageList()):
             print("Going to package destination")
+            print("End location: {0}" .format(driver.getPackageList()[0].getNodeEndLocation()))
             print(nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getPackageList()[0].getNodeEndLocation() ))
-            driver.getPackageList().pop(0)
+            packageDroppedOff = driver.getPackageList().pop(0)
             if(driver.getPackageList()):
-                updatedState = State.State(truck.Vehicle(driver.getPackageList()[0].getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), None)
+                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), None)
             else:
-                updatedState = State.State(truck.Vehicle(driver.getPackageList()[0].getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), None)
+                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), None, driver.getHomeLocation()), None)
 
         #nothing in either package list or drop off list
         # go home
