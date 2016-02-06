@@ -23,36 +23,37 @@ class Problem:
         #list
         if(packageList):
             print("Going to package")
-            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), packageList[0].getNodeStartLocation()))
+            star = nx.astar_path(Problem.graph, driver.getCurrLocation(), packageList[0].getNodeStartLocation())
+            print(star)
             print("Before Pop: {0}" .format(packageList))
             packagePickedUp = packageList.pop(0)
             print("After Pop: {0}" .format(packageList))
             print("Package Picked up {0}" .format(packagePickedUp))
             if(packageList):
                 driver.getPackageList().append(packagePickedUp)
-                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList)
+                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList, star)
             else:
                 driver.getPackageList().append(packagePickedUp)
-                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList)
+                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList, star)
 
         #if there aren't any packages in the main list
         # but the driver has one on his drop off list
         elif(driver.getPackageList()):
             print("Going to package destination")
             print("End location: {0}" .format(driver.getPackageList()[0].getNodeEndLocation()))
-            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getPackageList()[0].getNodeEndLocation() ))
+            star = nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getPackageList()[0].getNodeEndLocation() )
             packageDroppedOff = driver.getPackageList().pop(0)
             if(driver.getPackageList()):
-                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), None)
+                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), None, star)
             else:
-                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), None, driver.getHomeLocation()), None)
+                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), None, driver.getHomeLocation()), None, star)
 
         #nothing in either package list or drop off list
         # go home
         elif(not driver.getPackageList()):
             print("Getting the fuck outta here")
-            print(nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getHomeLocation()))
-            updatedState = State.State(None, None)
+            star = nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getHomeLocation())
+            updatedState = State.State(None, None, star)
 
 
         return [updatedState]
