@@ -22,6 +22,7 @@ class Problem:
 
         #if there is still a package in the main package
         #list
+        print("Number of packages in packageLise {0}" .format(packageList))
         if(packageList):
 
             for p in packageList:
@@ -34,6 +35,7 @@ class Problem:
                 # print("Package Picked up {0}" .format(packagePickedUp))
                 driver.getPackageList().append(packagePickedUp)
                 packageList.remove(p)
+                print("Number of packages in packageLise while in for {0}" .format(packageList))
                 updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList, star)
                 updatedStateList.append(updatedState)
 
