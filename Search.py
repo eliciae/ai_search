@@ -6,17 +6,22 @@ class Search:
         return
 
     def search(self, problem, initialState):
+        counter = 0
         searchQueue = queue.PriorityQueue()
-        searchQueue.put(initialState)
+        searchQueue.put((1, counter, initialState))
+
         while(searchQueue.not_empty):
             here = searchQueue.get()
-            if problem.isGoal(here):
+            state = here[2]
+            if problem.isGoal(state):
+                # variable "here" is a tuple. here[1] access the state
                 print("goal")
                 return here
             else:
-                print("Current Vehicle Location: {0}" .format(here.getVehicleList().getCurrLocation()))
-                nextState = problem.successors(here)
+                nextState = problem.successors(state)
+                print("Current Vehicle Location: {0}" .format(state.getVehicleList().getCurrLocation()))
                 for s in nextState:
-                    searchQueue.put(len(s.getAStarList()), s)
+                    counter = counter + 1
+                    searchQueue.put((len(s.getAStarList()), counter, s))
                 #print(nextState.getVehicleList().getCurrLocation())
         return "Failed Hardcore"

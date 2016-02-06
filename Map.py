@@ -118,5 +118,5 @@ for pkgLocation in pkgList:
 
 print("Vehicle Start location: {0}" .format(vehicle.getCurrLocation()))
 mySearch = Search.Search()
-mySearch.search(prob.Problem(w), State.State(vehicle, pkgList))
+mySearch.search(prob.Problem(w), State.State(vehicle, pkgList, []))
 draw(w)
