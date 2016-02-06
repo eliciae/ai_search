@@ -23,6 +23,7 @@ class Problem:
         #if there is still a package in the main package
         #list
         if(packageList):
+
             for p in packageList:
                 print("Going to package")
                 star = nx.astar_path(Problem.graph, driver.getCurrLocation(), p.getNodeStartLocation())
@@ -57,5 +58,6 @@ class Problem:
             print(star)
             updatedState = State.State(None, None, star)
             updatedStateList.append(updatedState)
+
 
         return updatedStateList
