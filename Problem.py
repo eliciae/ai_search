@@ -2,6 +2,7 @@ from ai_search import Vehicle as truck
 from ai_search import State
 from ai_search import Package as Pkg
 import networkx as nx
+import copy
 
 
 class Problem:
@@ -15,15 +16,15 @@ class Problem:
 
     def successors(self, state):
         driver = state.getVehicleList()
-        packageList = state.getPackageList()
+        packageList = copy.deepcopy(state.getPackageList())
         updatedStateList = []
         # print("Driver package list {0}" .format(driver.getPackageList()))
         ##side comment: if there are multiple drivers
 
         #if there is still a package in the main package
         #list
-        print("Number of packages in packageLise {0}" .format(packageList))
-        if(packageList):
+
+        if(state.getPackageList()):
 
             for p in packageList:
                 print("Going to package")
@@ -34,10 +35,13 @@ class Problem:
                 # print("After Pop: {0}" .format(packageList))
                 # print("Package Picked up {0}" .format(packagePickedUp))
                 driver.getPackageList().append(packagePickedUp)
-                packageList.remove(p)
-                print("Number of packages in packageLise while in for {0}" .format(packageList))
-                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList, star)
+                # packageList.remove(p)
+                # print("Package being pickuped up {0}" .format(p))
+                #print("Original Package List {0}" .format(state.getPackageList()))
+                state.getPackageList().pop()
+                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), state.getPackageList(), star)
                 updatedStateList.append(updatedState)
+
 
         #if there aren't any packages in the main list
         # but the driver has one on his drop off list
