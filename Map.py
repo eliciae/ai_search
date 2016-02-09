@@ -28,7 +28,7 @@ def makeMap(m, n, gapfreq):
     """
     g = nx.grid_2d_graph(m, n)
     weights = [(1, 100)]
-    prune(g, gapfreq)
+    #prune(g, gapfreq)
     setWeights(g, weights)
     return g
 
@@ -100,17 +100,18 @@ def addPackages(g, numPkg):
     """
     pkgList = []
     for i in range(0, numPkg):
-        pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+        #pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+        pkgList.append(pkg.Package(g.nodes()[i], g.nodes()[i+1]))
     return pkgList
 
 # script to use the above functions
-dim = 5
+dim = 3
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
 pkgList = addPackages(w, 3)
-location = rand.choice(w.nodes())
+location = w.nodes()[5]
 #print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
 vehicle = truck.Vehicle(location, [], location)
 for pkgLocation in pkgList:

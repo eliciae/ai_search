@@ -12,11 +12,11 @@ class Problem:
         Problem.graph = myMap
 
     def isGoal(self, state):
-        return not state.getPackageList() and not state.getVehicleList()
+        return not state.getPackageList() and not state.getVehicleList() and (state.getVehicleList().getCurrLocation() == state.getVehicleList().getHomeLocation())
 
     def successors(self, state):
         driver = state.getVehicleList()
-        packageList = copy.deepcopy(state.getPackageList())
+        packageList = state.getPackageList()
         updatedStateList = []
         # print("Driver package list {0}" .format(driver.getPackageList()))
         ##side comment: if there are multiple drivers
@@ -24,45 +24,49 @@ class Problem:
         #if there is still a package in the main package
         #list
 
-        if(state.getPackageList()):
+        if(packageList):
 
-            for p in packageList:
+            for packageIndex in range(0, len(packageList)):
+                copyState = copy.deepcopy(state)
+                updatedDriver = copyState.getVehicleList()
+                packagePickedUp = copyState.getPackageList().pop(packageIndex)
                 print("Going to package")
-                star = nx.astar_path(Problem.graph, driver.getCurrLocation(), p.getNodeStartLocation())
+                star = nx.astar_path(Problem.graph, updatedDriver.getCurrLocation(), packagePickedUp.getNodeStartLocation())
                 print(star)
-                #print("Before Pop: {0}" .format(packageList))
-                packagePickedUp = p
-                # print("After Pop: {0}" .format(packageList))
-                # print("Package Picked up {0}" .format(packagePickedUp))
-                driver.getPackageList().append(packagePickedUp)
-                # packageList.remove(p)
-                # print("Package being pickuped up {0}" .format(p))
-                #print("Original Package List {0}" .format(state.getPackageList()))
-                state.getPackageList().pop()
-                updatedState = State.State(truck.Vehicle(packagePickedUp.getNodeStartLocation(), driver.getPackageList(), driver.getHomeLocation()), state.getPackageList(), star)
-                updatedStateList.append(updatedState)
+                updatedDriver.getPackageList().append(packagePickedUp)
+                # print("Before Original Package List {0}" .format(state.getPackageList()))
+                # print("Before Copy List {0}" .format(copyState.getPackageList))
+                #
+                #
+                # print("After Original Package List {0}" .format(state.getPackageList()))
+                # print("After Copy List {0}" .format(copyState.getPackageList))
+                copyState.setAStarList(star)
+                copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
+                updatedStateList.append(copyState)
 
 
         #if there aren't any packages in the main list
         # but the driver has one on his drop off list
-        if(driver.getPackageList):
-            for dPackage in driver.getPackageList():
+        if(driver.getPackageList()):
+            for driverPackageIndex in range(0, len(driver.getPackageList())):
+                copyState = copy.deepcopy(state)
+                droppedPackage =  copyState.getVehicleList().getPackageList().pop(driverPackageIndex)
                 print("Going to package destination")
-                print("End location: {0}" .format(dPackage.getNodeEndLocation()))
-                star = nx.astar_path(Problem.graph, driver.getCurrLocation(), dPackage.getNodeEndLocation() )
+                print("End location: {0}" .format(droppedPackage.getNodeEndLocation()))
+                star = nx.astar_path(Problem.graph, driver.getCurrLocation(), droppedPackage.getNodeEndLocation() )
                 print(star)
-                packageDroppedOff = dPackage
-                driver.getPackageList().remove(dPackage)
-                updatedState = State.State(truck.Vehicle(packageDroppedOff.getNodeEndLocation(), driver.getPackageList(), driver.getHomeLocation()), packageList, star)
-                updatedStateList.append(updatedState)
+                copyState.setAStarList(star)
+                copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
+                updatedStateList.append(copyState)
 
         #nothing in either package list or drop off list
         # go home
-        if(not driver.getPackageList() and not packageList):
+        if(not driver.getPackageList() and not packageList and (driver.getCurrLocation() != driver.getHomeLocation())):
             print("Getting the fuck outta here")
             star = nx.astar_path(Problem.graph, driver.getCurrLocation(), driver.getHomeLocation())
             print(star)
-            updatedState = State.State(None, None, star)
+            driver.setCurrLocation(driver.getHomeLocation())
+            updatedState = State.State(driver, None, star)
             updatedStateList.append(updatedState)
 
 
