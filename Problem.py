@@ -23,9 +23,8 @@ class Problem:
 
         #if there is still a package in the main package
         #list
-
-        if(packageList):
-
+        # and the driver has room to pick it up
+        if(packageList and driver.getCapacity() > len(driver.getPackageList())):
             for packageIndex in range(0, len(packageList)):
                 copyState = copy.deepcopy(state)
                 updatedDriver = copyState.getVehicleList()

@@ -113,7 +113,7 @@ print(w.nodes())
 pkgList = addPackages(w, 3)
 location = w.nodes()[5]
 #print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
-vehicle = truck.Vehicle(location, [], location)
+vehicle = truck.Vehicle(location, [], location, 2)
 for pkgLocation in pkgList:
     print("PkgStart: {0}, PkgEnd: {1}" .format(pkgLocation.getNodeStartLocation(), pkgLocation.getNodeEndLocation()))
 
