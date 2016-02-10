@@ -28,7 +28,7 @@ def makeMap(m, n, gapfreq):
     """
     g = nx.grid_2d_graph(m, n)
     weights = [(1, 100)]
-    #prune(g, gapfreq)
+    prune(g, gapfreq)
     setWeights(g, weights)
     return g
 
@@ -100,12 +100,12 @@ def addPackages(g, numPkg):
     """
     pkgList = []
     for i in range(0, numPkg):
-        #pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
-        pkgList.append(pkg.Package(g.nodes()[i], g.nodes()[i+1]))
+        pkgList.append(pkg.Package(rand.choice(g.nodes()), rand.choice(g.nodes())))
+        #pkgList.append(pkg.Package(g.nodes()[i], g.nodes()[i+1]))
     return pkgList
 
 # script to use the above functions
-dim = 3
+dim = 5
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
@@ -119,5 +119,5 @@ for pkgLocation in pkgList:
 
 print("Vehicle Start location: {0}" .format(vehicle.getCurrLocation()))
 mySearch = Search.Search()
-mySearch.search(prob.Problem(w), State.State(vehicle, pkgList, []))
+mySearch.search(prob.Problem(w), State.State(vehicle, pkgList, 0))
 draw(w)

@@ -1,8 +1,8 @@
 class State:
-    def __init__(self, vehicleList, packagePickUpList, aStarList):
+    def __init__(self, vehicleList, packagePickUpList, heuristicValue):
         self.vehicleList = vehicleList
         self.packagePickUpList = packagePickUpList
-        self.aStarList = aStarList
+        self.heuristicValue = heuristicValue
 
     def getVehicleList(self):
         return self.vehicleList
@@ -10,8 +10,8 @@ class State:
     def getPackageList(self):
         return self.packagePickUpList
 
-    def getAStarList(self):
-        return self.aStarList
+    def getHeuristicValue(self):
+        return self.heuristicValue
 
-    def setAStarList(self, aStarList):
-        self.aStarList = aStarList
+    def setHeuristicValue(self, hVal):
+        self.heuristicValue = hVal

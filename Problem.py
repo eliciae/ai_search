@@ -30,8 +30,6 @@ class Problem:
                 updatedDriver = copyState.getVehicleList()
                 packagePickedUp = copyState.getPackageList().pop(packageIndex)
                 print("Going to package")
-                star = nx.astar_path(Problem.graph, updatedDriver.getCurrLocation(), packagePickedUp.getNodeStartLocation())
-                print(star)
                 updatedDriver.getPackageList().append(packagePickedUp)
                 # print("Before Original Package List {0}" .format(state.getPackageList()))
                 # print("Before Copy List {0}" .format(copyState.getPackageList))
@@ -39,22 +37,19 @@ class Problem:
                 #
                 # print("After Original Package List {0}" .format(state.getPackageList()))
                 # print("After Copy List {0}" .format(copyState.getPackageList))
-                copyState.setAStarList(star)
+                copyState.setHeuristicValue(heuristic(False, packagePickedUp, copyState))
                 copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
                 updatedStateList.append(copyState)
 
 
-        #if there aren't any packages in the main list
-        # but the driver has one on his drop off list
+        # the driver has one or more packages on his drop off list
         if(driver.getPackageList()):
             for driverPackageIndex in range(0, len(driver.getPackageList())):
                 copyState = copy.deepcopy(state)
                 droppedPackage =  copyState.getVehicleList().getPackageList().pop(driverPackageIndex)
                 print("Going to package destination")
                 print("End location: {0}" .format(droppedPackage.getNodeEndLocation()))
-                star = nx.astar_path(Problem.graph, driver.getCurrLocation(), droppedPackage.getNodeEndLocation() )
-                print(star)
-                copyState.setAStarList(star)
+                copyState.setHeuristicValue(heuristic(True, droppedPackage, copyState))
                 copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
                 updatedStateList.append(copyState)
 
@@ -70,3 +65,18 @@ class Problem:
 
 
         return updatedStateList
+
+
+# take into account the number of packages you have and the distance to the nearest drop/pickup
+# node, giving higher preference to the drop nodes when you are closer to capacity
+# --- combine these two ideas ---
+# if the num packages left is greater than the number remaining/num cars
+# then go drop things off and let the other cars deal with it
+def heuristic(isDropNode, package, state):
+    driver = state.getVehicleList()
+    if isDropNode:
+        star = nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeEndLocation())
+    else:
+        star = nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeStartLocation())
+
+    return len(star)
