@@ -74,9 +74,30 @@ class Problem:
 # then go drop things off and let the other cars deal with it
 def heuristic(isDropNode, package, state):
     driver = state.getVehicleList()
+    #a backwards array of the capacity to award points
+    points = [i for i in range(0, driver.getCapacity())]
+    points.reverse()
+    #drop off
     if isDropNode:
-        star = nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeEndLocation())
+        star = len(nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeEndLocation()))
+        # don't penalize for dropping off
+        totalVal = star
+    #pick up
     else:
-        star = nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeStartLocation())
+        star = len(nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeStartLocation()))
+        # the lower the difference between capacity and num packages you have, the greater the penalty
+        totalVal = star + points[(driver.getCapacity() - len(driver.getPackageList()))]
 
-    return len(star)
+    return totalVal
+
+# def heuristic1(isDropNode, package, state):
+#     driver = state.getVehicleList()
+#     #drop off
+#     if isDropNode:
+#         star = len(nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeEndLocation()))
+#
+#     #pick up
+#     else:
+#         star = len(nx.astar_path(Problem.graph, driver.getCurrLocation(), package.getNodeStartLocation()))
+#
+#     return totalVal
