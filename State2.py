@@ -33,7 +33,7 @@ class State2:
         return self.actualCost
 
     def setActualCost(self, actualCost):
-        self.actualCost = actualCost
+        self.actualCost += actualCost
 
     # Get the A* path
     def getAStarPath(self):

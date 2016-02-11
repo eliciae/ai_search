@@ -14,9 +14,9 @@ class Search2:
 
         while(not searchQueue.isEmpty()):
             here = searchQueue.pop()
-            # variable "here" is a tuple. here[2] access the state
             if problem.isGoal(here):
                 print("goal {0}" .format(here.getAStarPath()))
+                print("Actual Cost {0}" .format(here.getActualCost()))
                 return here
             else:
                 print("Current Vehicle Location: {0}" .format(here.getVehicleList().getCurrLocation()))

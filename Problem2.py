@@ -12,7 +12,7 @@ class Problem2:
         Problem2.graph = myMap
 
     def isGoal(self, state):
-        return not state.getPackageList() and not state.getVehicleList() and (state.getVehicleList().getCurrLocation() == state.getVehicleList().getHomeLocation())
+        return not state.getPackageList() and (state.getVehicleList().getCurrLocation() == state.getVehicleList().getHomeLocation())
 
     def successors(self, state):
         driver = state.getVehicleList()
@@ -26,13 +26,12 @@ class Problem2:
                 packagePickedUp = copyState.getPackageList().pop(packageIndex)
                 print("Going to package {0}" .format(packagePickedUp.getNodeStartLocation()))
                 updatedDriver.getPackageList().append(packagePickedUp)
-
-                copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
                 copyState.setProjectedCost(Problem2.pickFarthestPackageAwayPlusDistanceToGarage(self, copyState, packagePickedUp))
                 print("Projected Cost: {0}" .format(copyState.getProjectedCost()))
                 copyState.setActualCost(Problem2.returnActualCost(self, copyState, packagePickedUp))
                 print("Actual Cost: {0}" .format(copyState.getActualCost()))
-                copyState.setAStarPath(Problem2.returnAStarPath(self, state, packagePickedUp))
+                copyState.setAStarPath(Problem2.returnAStarPathPickUp(self, state, packagePickedUp))
+                copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
 
                 updatedStateList.append(copyState)
 
@@ -43,20 +42,22 @@ class Problem2:
                 copyState = copy.deepcopy(state)
                 droppedPackage = copyState.getVehicleList().getPackageList().pop(driverPackageIndex)
                 print("Going to package destination")
-                copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
-
                 copyState.setProjectedCost(Problem2.pickFarthestPackageAwayPlusDistanceToGarage(self,copyState, droppedPackage))
                 copyState.setActualCost(Problem2.returnActualCost(self, copyState, droppedPackage))
-                copyState.setAStarPath(Problem2.returnAStarPath(self, state, droppedPackage))
+                copyState.setAStarPath(Problem2.returnAStarPathDropOff(self, state, droppedPackage))
+                copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
+
                 updatedStateList.append(copyState)
 
         #nothing in either package list or drop off list
         # go home
-        if(not driver.getPackageList() and not packageList and (driver.getCurrLocation() != driver.getHomeLocation())):
-            star = (nx.astar_path(Problem2.graph, driver.getCurrLocation(), driver.getHomeLocation()))
+        if(not driver.getPackageList() and not packageList and not (driver.getCurrLocation() == driver.getHomeLocation())):
+            print("Going Home")
+            star = nx.astar_path(Problem2.graph, driver.getCurrLocation(), driver.getHomeLocation())
             copyState = copy.deepcopy(state)
+            copyState.getVehicleList().setCurrLocation(driver.getHomeLocation())
             copyState.setProjectedCost(len(star))
-            copyState.setActualCost(len(star))
+            #copyState.setActualCost(len(star))
             copyState.setAStarPath(star)
             updatedStateList.append(copyState)
 
@@ -81,11 +82,17 @@ class Problem2:
     def returnActualCost(self, state, subGoalNode):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
         packageLocation = subGoalNode.getNodeStartLocation()
-        print("Actual Cost: {0}" .format(len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
+        print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
         return len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
 
-    def returnAStarPath(self, state, subGoalNode):
+    def returnAStarPathPickUp(self, state, subGoalNodePickUp):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
-        packageLocation = subGoalNode.getNodeStartLocation()
+        packageLocation = subGoalNodePickUp.getNodeStartLocation()
+        #print("Lenth of A Star: {0}" .format(len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
+        return nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation)
+
+    def returnAStarPathDropOff(self, state, subGoalNodeDropOff):
+        driverCurrLocation = state.getVehicleList().getCurrLocation()
+        packageLocation = subGoalNodeDropOff.getNodeEndLocation()
         #print("Lenth of A Star: {0}" .format(len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
         return nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation)
