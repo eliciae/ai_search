@@ -8,12 +8,12 @@ class Search2:
         return
 
     def search2(self, problem, initialState):
+        counter = 0
+        searchQueue = queue.PriorityQueue()
+        searchQueue._put((1,counter,initialState))
 
-        searchQueue = StateQueue.StateQueue()
-        searchQueue.add(initialState)
-
-        while(not searchQueue.isEmpty()):
-            here = searchQueue.pop()
+        while(not searchQueue.empty()):
+            here = searchQueue.get()[2]
             if problem.isGoal(here):
                 print("goal {0}" .format(here.getAStarPath()))
                 print("Actual Cost {0}" .format(here.getActualCost()))
@@ -22,6 +22,7 @@ class Search2:
                 print("Current Vehicle Location: {0}" .format(here.getVehicleList().getCurrLocation()))
                 nextState = problem.successors(here)
                 for s in nextState:
-                    searchQueue.add(s)
+                    searchQueue.put((s.getProjectedCost(), counter, s))
+                    counter += 1
 
         return "Failed Hardcore"
