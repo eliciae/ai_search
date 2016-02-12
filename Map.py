@@ -108,7 +108,7 @@ def addPackages(g, numPkg):
     return pkgList
 
 # script to use the above functions
-dim = 5
+dim = 3
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())

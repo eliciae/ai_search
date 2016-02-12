@@ -28,9 +28,9 @@ class Problem2:
                 updatedDriver.getPackageList().append(packagePickedUp)
                 copyState.setProjectedCost(Problem2.pickFarthestPackageAwayPlusDistanceToGarage(self, copyState, packagePickedUp))
                 print("Projected Cost: {0}" .format(copyState.getProjectedCost()))
-                copyState.setActualCost(Problem2.returnActualCost(self, copyState, packagePickedUp))
+                copyState.setActualCost(Problem2.returnActualCostPickUp(self, copyState, packagePickedUp))
                 print("Actual Cost: {0}" .format(copyState.getActualCost()))
-                copyState.setAStarPath(Problem2.returnAStarPathPickUp(self, state, packagePickedUp))
+                copyState.setAStarPath(Problem2.returnAStarPathPickUp(self, copyState, packagePickedUp))
                 copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
 
                 updatedStateList.append(copyState)
@@ -43,8 +43,8 @@ class Problem2:
                 droppedPackage = copyState.getVehicleList().getPackageList().pop(driverPackageIndex)
                 print("Going to package destination")
                 copyState.setProjectedCost(Problem2.pickFarthestPackageAwayPlusDistanceToGarage(self,copyState, droppedPackage))
-                copyState.setActualCost(Problem2.returnActualCost(self, copyState, droppedPackage))
-                copyState.setAStarPath(Problem2.returnAStarPathDropOff(self, state, droppedPackage))
+                copyState.setActualCost(Problem2.returnActualCostDropOff(self, copyState, droppedPackage))
+                copyState.setAStarPath(Problem2.returnAStarPathDropOff(self, copyState, droppedPackage))
                 copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
 
                 updatedStateList.append(copyState)
@@ -59,6 +59,7 @@ class Problem2:
             copyState.setProjectedCost(len(star))
             #copyState.setActualCost(len(star))
             copyState.setAStarPath(star)
+            copyState.setActualCost(len(star))
             updatedStateList.append(copyState)
 
 
@@ -79,14 +80,21 @@ class Problem2:
         projectedDistace = driverToPackageDistance + packageToHomeDistance
         return projectedDistace
 
-    def returnActualCost(self, state, subGoalNode):
+    def returnActualCostPickUp(self, state, subGoalNode):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
         packageLocation = subGoalNode.getNodeStartLocation()
         print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
         return len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
 
+    def returnActualCostDropOff(self, state, subGoalNode):
+        driverCurrLocation = state.getVehicleList().getCurrLocation()
+        packageLocation = subGoalNode.getNodeEndLocation()
+        print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
+        return len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
+
     def returnAStarPathPickUp(self, state, subGoalNodePickUp):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
+        print("Return {0}" .format(driverCurrLocation))
         packageLocation = subGoalNodePickUp.getNodeStartLocation()
         #print("Lenth of A Star: {0}" .format(len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
         return nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation)

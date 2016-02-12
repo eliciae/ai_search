@@ -42,4 +42,5 @@ class State2:
     # Make the list of path the carrier travels
     # to make it to the goal
     def setAStarPath(self, star):
+        print("Current Path: {0},  Path Added: {1}" .format(len(self.CurrentAStarPath), len(star)))
         self.CurrentAStarPath += star
