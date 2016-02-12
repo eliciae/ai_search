@@ -12,12 +12,13 @@ class Problem2:
         Problem2.graph = myMap
 
     def isGoal(self, state):
-        return not state.getPackageList() and (state.getVehicleList().getCurrLocation() == state.getVehicleList().getHomeLocation())
+        return (state.getPackageList()==[]) and (state.getVehicleList().getCurrLocation() == state.getVehicleList().getHomeLocation()) and (state.getVehicleList().getPackageList()==[])
 
     def successors(self, state):
         driver = state.getVehicleList()
         packageList = state.getPackageList()
         updatedStateList = []
+
 
         if(packageList and driver.getCapacity() > len(driver.getPackageList())):
             for packageIndex in range(0, len(packageList)):
@@ -77,24 +78,24 @@ class Problem2:
         #print("Package's location: {0}" .format(packageLocation))
         driverToPackageDistance = len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
         packageToHomeDistance = len(nx.astar_path(Problem2.graph, packageLocation, driverHomeLocation))
-        projectedDistace = driverToPackageDistance + packageToHomeDistance
+        # over lapping value so minus 1
+        projectedDistace = driverToPackageDistance + packageToHomeDistance - 1
         return projectedDistace
 
     def returnActualCostPickUp(self, state, subGoalNode):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
         packageLocation = subGoalNode.getNodeStartLocation()
-        print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
-        return len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
+        #print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
+        return (len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))-1)
 
     def returnActualCostDropOff(self, state, subGoalNode):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
         packageLocation = subGoalNode.getNodeEndLocation()
-        print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
-        return len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))
+        #print("Actual Path: {0}" .format((nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
+        return (len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))-1)
 
     def returnAStarPathPickUp(self, state, subGoalNodePickUp):
         driverCurrLocation = state.getVehicleList().getCurrLocation()
-        print("Return {0}" .format(driverCurrLocation))
         packageLocation = subGoalNodePickUp.getNodeStartLocation()
         #print("Lenth of A Star: {0}" .format(len(nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation))))
         return nx.astar_path(Problem2.graph, driverCurrLocation, packageLocation)
