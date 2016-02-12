@@ -1,9 +1,8 @@
 class Vehicle:
-    def __init__(self, myCurrLocation, myPackageList, myHomeLocation, capacity):
+    def __init__(self, myCurrLocation, myPackageList, myHomeLocation):
         self.myPackageList = myPackageList
         self.myCurrentLocation = myCurrLocation
         self.myHomeLocation = myHomeLocation
-        self.capacity = capacity
 
     def getCurrLocation(self):
         return self.myCurrentLocation
@@ -19,6 +18,3 @@ class Vehicle:
 
     def getHomeLocation(self):
         return self.myHomeLocation
-
-    def getCapacity(self):
-        return self.capacity
