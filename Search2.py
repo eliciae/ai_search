@@ -13,7 +13,7 @@ class Search2:
         while(not searchQueue.empty()):
             here = searchQueue.get()[2]
             if problem.isGoal(here):
-                # print("goal {0}" .format(here.getAStarPath()))
+                print("goal {0}" .format(here.getAStarPath()))
                 # print("goal Length {0}" .format(len(here.getAStarPath())))
                 # print("Actual Cost {0}" .format(here.getActualCost()))
                 return here

@@ -50,7 +50,7 @@ class OptimizeDistanceHeuristic:
 
         #nothing in either package list or drop off list
         # go home
-        if(not driver.getPackageList() and not packageList and not (driver.getCurrLocation() == driver.getHomeLocation())):
+        if(not driver.getPackageList() and not packageList and ((driver.getCurrLocation() == driver.getHomeLocation()) == False)):
             print("Going Home")
             star = nx.astar_path(OptimizeDistanceHeuristic.graph, driver.getCurrLocation(), driver.getHomeLocation())
             copyState = copy.deepcopy(state)

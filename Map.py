@@ -6,7 +6,9 @@ from ai_search import Package as pkg
 from ai_search import Vehicle as truck
 from ai_search import State2
 from ai_search import OptimizeDistanceProblem as problem
+#from ai_search import Problem2 as problem
 from ai_search import SLD_Search as SLDP_Search
+from ai_search import Search2
 import time
 
 
@@ -111,7 +113,7 @@ def addPackages(g, numPkg):
 # estimate of how much work we need to do.  We want to get the closest estimate
 # we can get to the actual distance --> h(n) <= h*(n) --> optimistic cost <= actual cost
 def Heuristic1():
-    def distanceFromHomeToPackToDesToHome(graph, state, farthestReachablePackage):
+    def distanceFromCurrToPackToDesToHome(graph, state, farthestReachablePackage):
         print("Heuristic 1")
         driverHomeLocation = state.getVehicleList().getHomeLocation()
         driverCurrLocation = state.getVehicleList().getCurrLocation()
@@ -125,10 +127,10 @@ def Heuristic1():
         # over lapping value so minus 1
         projectedDistace = packageToDestinationDistance + driverToPackageDistance + packageToHomeDistance - 2
         return projectedDistace
-    return distanceFromHomeToPackToDesToHome
+    return distanceFromCurrToPackToDesToHome
 
 def Heuristic2():
-    def projectStraightLineDistance(graph, state, farthestReachablePackage):
+    def projectStraightLineDistanceHomeToCurrToPackLocation(graph, state, farthestReachablePackage):
         print("Heuristic 2")
         driverHomeLocation = state.getVehicleList().getHomeLocation()
         driverCurrLocation = state.getVehicleList().getCurrLocation()
@@ -147,31 +149,31 @@ def Heuristic2():
 
         projectedDistance = dx + dy
         return projectedDistance
-    return projectStraightLineDistance
+    return projectStraightLineDistanceHomeToCurrToPackLocation
 
 def Heuristic3():
-    def projectStraightLineDistanceHomeToDestination(graph, state, farthestReachablePackage):
+    def projectStraightLineDistanceCurrToDestination(graph, state, farthestReachablePackage):
         print("Heuristic 3")
-        driverHomeLocation = state.getVehicleList().getHomeLocation()
-        DHL_XCoord = driverHomeLocation[0]
-        DHL_YCoord = driverHomeLocation[1]
+        driverCurrLocation = state.getVehicleList().getCurrLocation()
+        DCL_XCoord = driverCurrLocation[0]
+        DCL_YCoord = driverCurrLocation[1]
 
         packageLocation = farthestReachablePackage.getNodeEndLocation()
         PL_XCoord = packageLocation[0]
         PL_YCoord = packageLocation[1]
 
-        dx = abs(DHL_XCoord - PL_XCoord)
-        dy = abs(DHL_YCoord - PL_YCoord)
+        dx = abs(DCL_XCoord - PL_XCoord)
+        dy = abs(DCL_YCoord - PL_YCoord)
 
         projectedDistance = dx + dy
         return projectedDistance
-    return projectStraightLineDistanceHomeToDestination
+    return projectStraightLineDistanceCurrToDestination
 
 def Heuristic4():
     # Heuristic: the picking up a package (possibly the farthest package) is a good
     # estimate of how much work we need to do.  We want to get the closest estimate
     # we can get to the actual distance --> h(n) <= h*(n) --> optimistic cost <= actual cost
-    def pickPackageAwayPlusDistanceToGarage(graph, state, farthestReachablePackage):
+    def distanceFromCurrToPackToHome(graph, state, farthestReachablePackage):
         print("Heuristic 4")
         driverHomeLocation = state.getVehicleList().getHomeLocation()
         driverCurrLocation = state.getVehicleList().getCurrLocation()
@@ -183,21 +185,21 @@ def Heuristic4():
         # over lapping value so minus 1
         projectedDistace = driverToPackageDistance + packageToHomeDistance - 1
         return projectedDistace
-    return pickPackageAwayPlusDistanceToGarage
+    return distanceFromCurrToPackToHome
 
 # script to use the above functions
-rand.seed(10)
-dim = 3
+rand.seed(3)
+dim = 10
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
-pkgList = addPackages(w, 3)
+pkgList = addPackages(w, 7)
 #location = w.nodes()[2]
 location = rand.choice(w.nodes())
 print(location)
 #print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
-vehicle = truck.Vehicle(location, [], location, 1)
+vehicle = truck.Vehicle(location, [], location, 7)
 for pkgLocation in pkgList:
     print("PkgStart: {0}, PkgEnd: {1}" .format(pkgLocation.getNodeStartLocation(), pkgLocation.getNodeEndLocation()))
 
@@ -205,7 +207,9 @@ print("Vehicle Start location: {0}" .format(vehicle.getCurrLocation()))
 startTime = time.time()
 print("Start Time: {0}" .format(startTime))
 mySearch = SLDP_Search.SLD_Search()
-mySearch.SLD_Search(problem.OptimizeDistanceHeuristic(w, Heuristic3), State2.State2(vehicle, pkgList, 0, 0))
+mySearch.SLD_Search(problem.OptimizeDistanceHeuristic(w, Heuristic4), State2.State2(vehicle, pkgList, 0, 0))
+# mySearch = Search2.Search2()
+# mySearch.search2(problem.Problem2(w), State2.State2(vehicle, pkgList, 0, 0))
 endTime = time.time() - startTime
 print("End Time: {0}" .format(endTime))
 draw(w)
