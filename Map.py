@@ -8,7 +8,6 @@ from ai_search import State2
 from ai_search import OptimizeDistanceProblem as problem
 #from ai_search import Problem2 as problem
 from ai_search import SLD_Search as SLDP_Search
-from ai_search import Search2
 import time
 
 
@@ -189,17 +188,17 @@ def Heuristic4():
 
 # script to use the above functions
 rand.seed(3)
-dim = 10
+dim = 7
 gapfreq = 0.25
 w = makeMap(dim, dim, gapfreq)   # a square graph
 print(w.nodes())
 # the list of the assigned packages, change the second value for num of pkgs
-pkgList = addPackages(w, 7)
+pkgList = addPackages(w, 5)
 #location = w.nodes()[2]
 location = rand.choice(w.nodes())
 print(location)
 #print("Vehicle Location {0} and Package location is at {1} " .format(location, pkgList.getNodeStartLocation()))
-vehicle = truck.Vehicle(location, [], location, 7)
+vehicle = truck.Vehicle(location, [], location, 1)
 for pkgLocation in pkgList:
     print("PkgStart: {0}, PkgEnd: {1}" .format(pkgLocation.getNodeStartLocation(), pkgLocation.getNodeEndLocation()))
 
@@ -207,7 +206,7 @@ print("Vehicle Start location: {0}" .format(vehicle.getCurrLocation()))
 startTime = time.time()
 print("Start Time: {0}" .format(startTime))
 mySearch = SLDP_Search.SLD_Search()
-mySearch.SLD_Search(problem.OptimizeDistanceHeuristic(w, Heuristic4), State2.State2(vehicle, pkgList, 0, 0))
+mySearch.SLD_Search(problem.OptimizeDistanceHeuristic(w, Heuristic1), State2.State2(vehicle, pkgList, 0, 0))
 # mySearch = Search2.Search2()
 # mySearch.search2(problem.Problem2(w), State2.State2(vehicle, pkgList, 0, 0))
 endTime = time.time() - startTime

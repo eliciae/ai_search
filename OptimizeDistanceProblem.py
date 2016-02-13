@@ -3,6 +3,7 @@ import copy
 
 class OptimizeDistanceHeuristic:
     graph = None
+    counter = 0
 
 
     def __init__(self, myMap, function):
@@ -32,6 +33,8 @@ class OptimizeDistanceHeuristic:
                 copyState.setAStarPath(OptimizeDistanceHeuristic.returnAStarPathPickUp(self, copyState, packagePickedUp))
                 copyState.getVehicleList().setCurrLocation(packagePickedUp.getNodeStartLocation())
                 print("State Created")
+                self.counter += 1
+                print(self.counter)
                 updatedStateList.append(copyState)
 
 
@@ -46,6 +49,8 @@ class OptimizeDistanceHeuristic:
                 copyState.setAStarPath(OptimizeDistanceHeuristic.returnAStarPathDropOff(self, copyState, droppedPackage))
                 copyState.getVehicleList().setCurrLocation(droppedPackage.getNodeEndLocation())
                 print("Driver State Created")
+                self.counter += 1
+                print(self.counter)
                 updatedStateList.append(copyState)
 
         #nothing in either package list or drop off list
@@ -61,6 +66,8 @@ class OptimizeDistanceHeuristic:
             copyState.setActualCost(len(star))
             updatedStateList.append(copyState)
             print("Final State Created")
+            self.counter += 1
+            print(self.counter)
 
 
         return updatedStateList
